@@ -36,3 +36,36 @@ function colorCodeing(){
       }
     });
 }
+//assign the text to the timeBlock with data-hour equal to hour.
+function loadActivities(){
+  toDoList = JSON.parse(localStorage.getItem("activities"));
+
+  for (var i = 0; i < toDoList.length; i++){
+    $("[data-hour=" + toDoList[i].hour + "]").children("textarea").val(toDoList[i].text);
+  } 
+}
+
+function saveActivities(){
+  
+  //assign text to matching data-hour of button clicked
+  for (var i = 0; i < toDoList.length; i++){
+    if (toDoList[i].hour == $(this).parent().attr("data-hour")){
+      toDoList[i].text = (($(this).parent()).children("textarea")).val();
+    }
+  }
+  localStorage.setItem("activities", JSON.stringify(toDoList));
+  loadActivities();
+}
+
+// when the page loads
+$(document).ready(function(){
+  colorCodeing();
+  if(!localStorage.getItem("activities")){
+    intitializeActivities();
+  }
+
+  //load schedule from local storage
+  loadActivities();
+  //save when save button is clicked
+  $(".planner").on("click", "button", saveActivities);
+});
